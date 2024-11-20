@@ -7,51 +7,44 @@ int main(){
     cv::namedWindow("lab5_evm");
     cv::VideoCapture cap(0);
 
-    cv::TickMeter tm_full, tm;
 
-    if (!cap.isOpened()){
+    if (!cap.isOpened()) {
         std::cout << "No video stream detected" << std::endl;
         return -1;
     }
 
+    cv::TickMeter tm_full, tm_enter, tm_morph, tm_show, tm_wait;
     int full_frame_count = 0;
-    double full_time_enter = 0, full_time_morph = 0, full_time_show = 0;
 
     tm_full.start();
-    while (true){
+    while(true) {
 
-        tm.start();
+        tm_enter.start();
         cap >> myImage;
         if ( myImage.empty() ) { break; }
-        tm.stop();
-        full_time_enter += tm.getTimeSec();
-        tm.reset();
+        tm_enter.stop();
 
-        tm.start();
+        tm_morph.start();
         cv::flip(myImage, myImage, 0);
-        tm.stop();
-        full_time_morph += tm.getTimeSec();
-        tm.reset();
+        tm_morph.stop();
 
-        tm.start();
+        tm_show.start();
         cv::imshow("lab5_evm", myImage);
-        tm.stop();
-        full_time_show += tm.getTimeSec();
-        tm.reset();
+        tm_show.stop();
 
+        tm_wait.start();
         if (cv::waitKey(1) == 27) { break; }
+        tm_wait.stop();
 
         full_frame_count++;
     }
+
     tm_full.stop();
-
-    double percent = (full_time_enter + full_time_morph + full_time_show) / 100;
-
-    std::cout << "Time working: " << tm_full.getTimeSec()                    << " seconds" << std::endl 
-              <<  "Average fps: " << full_frame_count / tm_full.getTimeSec() << " fraps"   << std::endl 
-              << "Enter: "        << (full_time_enter / percent)             << "%"        << std::endl 
-              << "Morph: "        << (full_time_morph / percent)             << "%"        << std::endl 
-              << "Show: "         << (full_time_show / percent)              << "%"        << std::endl;
+    std::cout << "Time working: " << tm_full.getTimeSec()                                                                                     << std::endl 
+              <<  "Average fps: " << full_frame_count / tm_full.getTimeSec()                                             << " fraps"          << std::endl 
+              << "Enter: "        << (tm_enter.getTimeSec() / (tm_full.getTimeSec() - tm_wait.getTimeSec()) * 100)       << "%"        << " " << std::endl 
+              << "Morph: "        << (tm_morph.getTimeSec() / (tm_full.getTimeSec() - tm_wait.getTimeSec()) * 100)       << "%"        << " " << std::endl 
+              << "Show: "         << (tm_show.getTimeSec() / (tm_full.getTimeSec() - tm_wait.getTimeSec()) * 100)        << "%"        << " " << std::endl;
 
     cap.release();
 
