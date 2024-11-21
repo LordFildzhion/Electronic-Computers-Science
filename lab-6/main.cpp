@@ -1,24 +1,20 @@
 #include <iostream>
 #include <stdio.h>
 
-
 #include <libusb/include/libusb.h>
 
 
-using namespace std;
-
-
-static void print_device(libusb_device *dev, libusb_device_handle *handle = NULL);
+static void print_device(libusb_device *dev, libusb_device_handle *handle = nullptr);
 
 int main(){
 
-    libusb_context *ctx = NULL;
+    libusb_context *ctx = nullptr;
     int ret;
 
 
     ret = libusb_init(&ctx);
     if (ret < 0){
-        cerr << "Error: initialization failed, code: " << ret << "." << endl;
+        std::cerr << "Error: initialization failed, code: " << ret << "." << std::endl;
         return 1;
     }
 
@@ -29,13 +25,13 @@ int main(){
     ssize_t cnt;
     cnt = libusb_get_device_list(ctx, &devs);
     if (cnt < 0) {
-        cerr << "Error: The list of USB devices has not been received." << endl;
+        std::cerr << "Error: The list of USB devices has not been received." << std::endl;
         return 1;
     }
 
-    cout << "Number of devices found: " << cnt << endl;
+    std::cout << "Number of devices found: " << cnt << std::endl;
     for (ssize_t i = 0; i < cnt; i++) {
-        cout << "Device #" << i + 1 << " info:" << endl;
+        std::cout << "Device #" << i + 1 << " info:" << std::endl;
         print_device(devs[i]);
     }
 
@@ -54,7 +50,7 @@ static void print_device(libusb_device *dev, libusb_device_handle *handle)
 
 	ret = libusb_get_device_descriptor(dev, &desc);
 	if (ret < 0) {
-		cerr << "failed to get device descriptor" << endl;
+		std::cerr << "failed to get device descriptor" << std::endl;
 		return;
 	}
 
@@ -65,31 +61,32 @@ static void print_device(libusb_device *dev, libusb_device_handle *handle)
 		if (desc.iManufacturer) {
 			ret = libusb_get_string_descriptor_ascii(handle, desc.iManufacturer, string, sizeof(string));
 			if (ret > 0) {
-				cout << "\tManufacturer:              " << string << endl;
+				std::cout << "\tManufacturer:              " << string << std::endl;
             }
 		}
 
 		if (desc.iProduct) {
 			ret = libusb_get_string_descriptor_ascii(handle, desc.iProduct, string, sizeof(string));
 			if (ret > 0) {
-				cout << "\tProduct:                   " << string << endl;
+				std::cout << "\tProduct:                   " << string << std::endl;
             }
 		}
 
 		if (desc.iSerialNumber) {
 			ret = libusb_get_string_descriptor_ascii(handle, desc.iSerialNumber, string, sizeof(string));
 			if (ret > 0) {
-				cout << "\tSerial Number:             " << string << endl;
+				std::cout << "\tSerial Number:             " << string << std::endl;
             }
 		}
-        cout << endl;
 	}
     else {
-        cout << "\tThe device information could not be opened.\n"
+        std::cout << "\tThe device information could not be opened.\n"
              << "\tMost likely, it does not have a driver for interaction or its version is outdated.\n"
              << "\tCheck the device driver and try again" 
-             << endl;
+             << std::endl;
     }
+
+    std::cout << std::endl;
 
 	if (handle)
 		libusb_close(handle);

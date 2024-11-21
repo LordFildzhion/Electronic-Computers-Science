@@ -3,10 +3,12 @@ Device #1 info:
         The device information could not be opened.
         Most likely, it does not have a driver for interaction or its version is outdated.
         Check the device driver and try again
+
 Device #2 info:
         The device information could not be opened.
         Most likely, it does not have a driver for interaction or its version is outdated.
         Check the device driver and try again
+
 Device #3 info:
         Manufacturer:              Generic
         Product:                   Mass Storage
@@ -16,6 +18,7 @@ Device #4 info:
         The device information could not be opened.
         Most likely, it does not have a driver for interaction or its version is outdated.
         Check the device driver and try again
+
 Device #5 info:
         Manufacturer:              CHICONY
         Product:                   Chicony USB2.0 Camera
