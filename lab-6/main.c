@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "D:\Download\libusb-1.0.27\include\libusb.h"
+#include "libusb\include\libusb.h"
 
 
 void print_device_info(libusb_device *dev) {
@@ -13,8 +13,8 @@ void print_device_info(libusb_device *dev) {
 
 
     printf("Device Class: %02x\n", desc.bDeviceClass);
-    printf("Vendor ID: %04x\n", desc.idVendor);
-    printf("Product ID: %04x\n", desc.idProduct);
+    printf("Vendor ID:    %04x\n", desc.idVendor);
+    printf("Product ID:   %04x\n", desc.idProduct);
 
 
     libusb_device_handle *handle;
@@ -27,13 +27,17 @@ void print_device_info(libusb_device *dev) {
 
     if (desc.iSerialNumber > 0) {
         unsigned char serial[256];
+        
         r = libusb_get_string_descriptor_ascii(handle, desc.iSerialNumber, serial, sizeof(serial));
+
         if (r >= 0) {
             printf("Serial Number: %s\n", serial);
-        } else {
+        } 
+        else {
             fprintf(stderr, "Failed to get Serial Number: %s\n", libusb_error_name(r));
         }
-    } else {
+    } 
+    else {
         printf("No Serial Number\n");
     }
 
@@ -42,7 +46,7 @@ void print_device_info(libusb_device *dev) {
 }
 
 
-int main() {
+int main(int argc, char *argv) {
     libusb_context *ctx = NULL;
     int r = libusb_init(&ctx);
     if (r < 0) {
@@ -54,7 +58,7 @@ int main() {
     libusb_device **devices;
     ssize_t cnt = libusb_get_device_list(ctx, &devices);
     if (cnt < 0) {
-        fprintf(stderr, "Error getting device list: %s\n", libusb_error_name(cnt));
+        fprintf(stderr, "Error getting device list: %s\n", libusb_error_name((int)cnt));
         libusb_exit(ctx);
         return -1;
     }
@@ -68,5 +72,6 @@ int main() {
 
     libusb_free_device_list(devices, 1);
     libusb_exit(ctx);
+
     return 0;
 }

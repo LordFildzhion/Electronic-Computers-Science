@@ -1,0 +1,19 @@
+Device Class: 09
+Vendor ID: 8086
+Product ID: 461e
+Failed to open device: LIBUSB_ERROR_NOT_SUPPORTED
+
+Device Class: 09
+Vendor ID: 8086
+Product ID: 51ed
+Failed to open device: LIBUSB_ERROR_NOT_SUPPORTED
+
+Device Class: e0
+Vendor ID: 8087
+Product ID: 0033
+Failed to open device: LIBUSB_ERROR_NOT_SUPPORTED
+
+Device Class: ef
+Vendor ID: 04f2
+Product ID: b729
+Serial Number: 200901010001
