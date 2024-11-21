@@ -1,19 +1,22 @@
-Device Class: 09
-Vendor ID: 8086
-Product ID: 461e
-Failed to open device: LIBUSB_ERROR_NOT_SUPPORTED
+Number of devices found: 5
+Device #1 info:
+        The device information could not be opened.
+        Most likely, it does not have a driver for interaction or its version is outdated.
+        Check the device driver and try again
+Device #2 info:
+        The device information could not be opened.
+        Most likely, it does not have a driver for interaction or its version is outdated.
+        Check the device driver and try again
+Device #3 info:
+        Manufacturer:              Generic
+        Product:                   Mass Storage
+        Serial Number:             5850F2AB
 
-Device Class: 09
-Vendor ID: 8086
-Product ID: 51ed
-Failed to open device: LIBUSB_ERROR_NOT_SUPPORTED
-
-Device Class: e0
-Vendor ID: 8087
-Product ID: 0033
-Failed to open device: LIBUSB_ERROR_NOT_SUPPORTED
-
-Device Class: ef
-Vendor ID: 04f2
-Product ID: b729
-Serial Number: 200901010001
+Device #4 info:
+        The device information could not be opened.
+        Most likely, it does not have a driver for interaction or its version is outdated.
+        Check the device driver and try again
+Device #5 info:
+        Manufacturer:              CHICONY
+        Product:                   Chicony USB2.0 Camera
+        Serial Number:             200901010001

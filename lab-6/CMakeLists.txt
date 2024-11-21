@@ -3,7 +3,7 @@ project(lab-6)
 
 include_directories(${CMAKE_CURRENT_LIST_DIR})
 
-set(SRC_MAIN ./main.c)
+set(SRC_MAIN ./main.cpp)
 
 add_executable(lab-6 ${SRC_MAIN})
 
