@@ -1,0 +1,5 @@
+Time working: 4.46748
+Average fps: 27.7561 fraps
+Enter: 97.7116%
+Morph: 0.517701%
+Show: 1.74907%
