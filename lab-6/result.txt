@@ -10,6 +10,7 @@ Device #2 info:
         Check the device driver and try again
 
 Device #3 info:
+        Device class:              00
         Manufacturer:              Generic
         Product:                   Mass Storage
         Serial Number:             5850F2AB
@@ -20,6 +21,7 @@ Device #4 info:
         Check the device driver and try again
 
 Device #5 info:
+        Device class:              Other
         Manufacturer:              CHICONY
         Product:                   Chicony USB2.0 Camera
         Serial Number:             200901010001

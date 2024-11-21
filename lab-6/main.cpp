@@ -58,6 +58,21 @@ static void print_device(libusb_device *dev, libusb_device_handle *handle)
 		libusb_open(dev, &handle);
 
 	if (handle) {
+
+        if ((int)desc.bDeviceClass == 9) {
+            std::cout << "\tDevice class:              Hub" << std::endl;
+        }
+        else if ((int)desc.bDeviceClass == 224) {
+            std::cout << "\tDevice class:              Wireless controller" << std::endl;
+        } 
+        else if ((int)desc.bDeviceClass == 239) {
+            std::cout << "\tDevice class:              Other" << std::endl;
+        } 
+        else { 
+            printf("\tDevice class:              %02x", desc.bDeviceClass);
+            std::cout << std::endl;
+        }
+
 		if (desc.iManufacturer) {
 			ret = libusb_get_string_descriptor_ascii(handle, desc.iManufacturer, string, sizeof(string));
 			if (ret > 0) {
