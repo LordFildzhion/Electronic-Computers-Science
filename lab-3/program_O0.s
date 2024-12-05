@@ -1,162 +1,92 @@
 swap:
-        push    rbp						; Сохраняет текущее значение регистра rbp (базовый указатель стека) в стеке
-        mov     rbp, rsp				; Устанавливает новый базовый указатель стека равным текущему указателю стека (rsp)
-        mov     QWORD PTR [rbp-24], rdi	; Копирует значение в регистре rdi (первый аргумент функции) в память по адресу [rbp-24]
-        mov     QWORD PTR [rbp-32], rsi	; Копирует значение в регистре rsi (второй аргумент функции) в память по адресу [rbp-32]
-        mov     rax, QWORD PTR [rbp-24]	; Загружает адрес в rbp-24 в регистр rax
-        mov     rax, QWORD PTR [rax]	; Разыменовывает указатель rax и загружает значение, на которое он указывает
-        mov     QWORD PTR [rbp-8], rax	; Сохраняет значение из регистра rax по адресу [rbp-8]
-        mov     rax, QWORD PTR [rbp-32]	; Загружает адрес в rbp-32 в регистр rax
-        mov     rdx, QWORD PTR [rax]	; Разыменовывает указатель rax и загружает значение по адресу, на который указывает rax, в rdx
-        mov     rax, QWORD PTR [rbp-24]	; Загружает указатель в rbp-24 в rax
-        mov     QWORD PTR [rax], rdx	; 
-        mov     rax, QWORD PTR [rbp-32]	;
-        mov     rdx, QWORD PTR [rbp-8]	;
-        mov     QWORD PTR [rax], rdx	;
-        nop								;
-        pop     rbp						;
-        ret								;
+        push    rbp                     ; Сохранение старого значения базового указателя
+        mov     rbp, rsp                ; Установка текущего значения указателя стека в rbp
+        mov     QWORD PTR [rbp-24], rdi ; Сохранение первого аргумента (указателя rdi)
+        mov     QWORD PTR [rbp-32], rsi ; Сохранение второго аргумента (указателя rsi)
+        
+        ; Загружаем значение по адресу rdi
+        mov     rax, QWORD PTR [rbp-24]
+        mov     rax, QWORD PTR [rax]
+        mov     QWORD PTR [rbp-8], rax  ; Сохраняем его во временной переменной
+
+        ; Загружаем значение по адресу rsi
+        mov     rax, QWORD PTR [rbp-32]
+        mov     rdx, QWORD PTR [rax]
+
+        ; Меняем местами значения
+        mov     rax, QWORD PTR [rbp-24]
+        mov     QWORD PTR [rax], rdx    ; Перемещаем значение из rsi в rdi
+        mov     rax, QWORD PTR [rbp-32]
+        mov     rdx, QWORD PTR [rbp-8]  ; Загружаем временно сохранённое значение
+        mov     QWORD PTR [rax], rdx    ; Перемещаем его в rsi
+
+        nop                             ; Нет операции (может быть использовано как выравнивание или задержка)
+        pop     rbp                     ; Восстанавливаем старое значение базового указателя
+        ret                             ; Возвращаемся к вызвавшей функции
+
 BubbleSort:
-        push    rbp						;
-        mov     rbp, rsp				;
-        sub     rsp, 32					;
-        mov     QWORD PTR [rbp-24], rdi	;
-        mov     QWORD PTR [rbp-32], rsi	;
-        mov     QWORD PTR [rbp-8], 0	;
-        jmp     .L3						;
+        push    rbp                     ; Сохраняем старое значение базового указателя
+        mov     rbp, rsp                ; Устанавливаем текущий стек
+        sub     rsp, 32                 ; Выделяем место на стеке для локальных переменных
+
+        ; Сохранение аргументов функции
+        mov     QWORD PTR [rbp-24], rdi ; Сохраняем указатель на массив
+        mov     QWORD PTR [rbp-32], rsi ; Сохраняем размер массива
+
+        mov     QWORD PTR [rbp-8], 0    ; Сбрасываем индекс итерации внешнего цикла
+        jmp     .L3                     ; Переход к условию внешнего цикла
+
 .L7:
-        mov     QWORD PTR [rbp-16], 0	;
-        jmp     .L4						;
+        mov     QWORD PTR [rbp-16], 0   ; Сбрасываем индекс внутреннего цикла
+        jmp     .L4                     ; Переход к началу внутреннего цикла
+
 .L6:
-        mov     rax, QWORD PTR [rbp-16]	;
-        lea     rdx, [0+rax*8]			;
-        mov     rax, QWORD PTR [rbp-24]	;
-        add     rax, rdx				;
-        mov     rdx, QWORD PTR [rax]	;
-        mov     rax, QWORD PTR [rbp-16]	;
-        add     rax, 1					;
-        lea     rcx, [0+rax*8]			;
-        mov     rax, QWORD PTR [rbp-24]	;
-        add     rax, rcx				;
-        mov     rax, QWORD PTR [rax]	;
-        cmp     rdx, rax				;
-        jle     .L5						;
-        mov     rax, QWORD PTR [rbp-16]	;
-        add     rax, 1					;
-        lea     rdx, [0+rax*8]			;
-        mov     rax, QWORD PTR [rbp-24]	;
-        add     rdx, rax				;
-        mov     rax, QWORD PTR [rbp-16]	;
-        lea     rcx, [0+rax*8]			;
-        mov     rax, QWORD PTR [rbp-24]	;
-        add     rax, rcx				;
-        mov     rsi, rdx				;
-        mov     rdi, rax				;
-        call    swap					;
+        mov     rax, QWORD PTR [rbp-16] ; Загружаем индекс внутреннего цикла
+        lea     rdx, [0+rax*8]          ; Рассчитываем смещение первого элемента
+        mov     rax, QWORD PTR [rbp-24] ; Загружаем адрес массива
+        add     rax, rdx                ; Указываем на первый элемент
+        mov     rdx, QWORD PTR [rax]    ; Загружаем значение первого элемента
+
+        mov     rax, QWORD PTR [rbp-16] ; Загружаем индекс
+        add     rax, 1                  ; Увеличиваем на 1
+        lea     rcx, [0+rax*8]          ; Рассчитываем смещение второго элемента
+        mov     rax, QWORD PTR [rbp-24] ; Загружаем адрес массива
+        add     rax, rcx                ; Указываем на второй элемент
+        mov     rax, QWORD PTR [rax]    ; Загружаем значение второго элемента
+
+        cmp     rdx, rax                ; Сравниваем элементы
+        jle     .L5                     ; Переход, если первый <= второго
+
+        ; Меняем местами элементы, если они не в порядке
+        mov     rax, QWORD PTR [rbp-16]
+        add     rax, 1
+        lea     rdx, [0+rax*8]
+        mov     rax, QWORD PTR [rbp-24]
+        add     rdx, rax
+        mov     rax, QWORD PTR [rbp-16]
+        lea     rcx, [0+rax*8]
+        mov     rax, QWORD PTR [rbp-24]
+        add     rax, rcx
+        mov     rsi, rdx                ; Передаём указатели в функцию `swap`
+        mov     rdi, rax
+        call    swap                    ; Вызываем функцию для обмена значениями
+
 .L5:
-        add     QWORD PTR [rbp-16], 1	;
+        add     QWORD PTR [rbp-16], 1   ; Увеличиваем индекс внутреннего цикла
 .L4:
-        mov     rax, QWORD PTR [rbp-32]	;
-        sub     rax, QWORD PTR [rbp-8]	;
-        sub     rax, 1					;
-        cmp     QWORD PTR [rbp-16], rax	;
-        jb      .L6						;
-        add     QWORD PTR [rbp-8], 1	;
+        mov     rax, QWORD PTR [rbp-32]
+        sub     rax, QWORD PTR [rbp-8]
+        sub     rax, 1                  ; Вычисляем количество оставшихся элементов
+        cmp     QWORD PTR [rbp-16], rax ; Сравниваем индекс с количеством элементов
+        jb      .L6                     ; Продолжаем внутренний цикл
+
+        add     QWORD PTR [rbp-8], 1    ; Увеличиваем индекс внешнего цикла
 .L3:
-        mov     rax, QWORD PTR [rbp-32]	;
-        sub     rax, 1					;
-        cmp     QWORD PTR [rbp-8], rax	;
-        jb      .L7						;
-        nop								;
-        nop								;
-        leave							;
-        ret								;
-.LC0:
-        .string "r"						;
-.LC1:
-        .string "test.txt"				;
-.LC2:
-        .string "%llu"					;
-.LC4:
-        .string "%Lf\n"					;
-main:
-        push    rbp						;
-        mov     rbp, rsp				;
-        sub     rsp, 80					;
-        mov     rax, QWORD PTR stdin[rip]	;
-        mov     rdx, rax					;
-        mov     esi, OFFSET FLAT:.LC0		;
-        mov     edi, OFFSET FLAT:.LC1		;
-        call    freopen						;
-        mov     QWORD PTR [rbp-16], rax		;
-        lea     rdx, [rbp-56]				;
-        mov     rax, QWORD PTR [rbp-16]		;
-        mov     esi, OFFSET FLAT:.LC2		;
-        mov     rdi, rax					;
-        mov     eax, 0						;
-        call    __isoc99_fscanf				;
-        mov     rax, QWORD PTR [rbp-56]		;
-        sal     rax, 3						;
-        mov     rdi, rax					;
-        call    malloc						;
-        mov     QWORD PTR [rbp-24], rax		;
-        mov     QWORD PTR [rbp-8], 0		;
-        jmp     .L9							;
-.L10:
-        mov     rax, QWORD PTR [rbp-8]		;
-        lea     rdx, [0+rax*8]				;
-        mov     rax, QWORD PTR [rbp-24]		;
-        add     rdx, rax					;
-        mov     rax, QWORD PTR [rbp-16]		;
-        mov     esi, OFFSET FLAT:.LC2		;
-        mov     rdi, rax					;
-        mov     eax, 0						;
-        call    __isoc99_fscanf				;
-        add     QWORD PTR [rbp-8], 1		;
-.L9:
-        mov     rax, QWORD PTR [rbp-56]		;
-        cmp     QWORD PTR [rbp-8], rax		;
-        jb      .L10						;
-        rdtsc								;
-        sal     rdx, 32						;
-        or      rax, rdx					;
-        mov     QWORD PTR [rbp-32], rax		;
-        mov     eax, 2500000000				;
-        mov     QWORD PTR [rbp-40], rax		;
-        mov     rdx, QWORD PTR [rbp-56]		;
-        mov     rax, QWORD PTR [rbp-24]		;
-        mov     rsi, rdx					;
-        mov     rdi, rax					;
-        call    BubbleSort					;
-        mov     rax, QWORD PTR [rbp-24]		;
-        mov     rdi, rax					;
-        call    free						;
-        rdtsc								;
-        sal     rdx, 32						;
-        or      rax, rdx					;
-        mov     QWORD PTR [rbp-48], rax		;
-        mov     rax, QWORD PTR [rbp-48]		;
-        sub     rax, QWORD PTR [rbp-32]		;
-        mov     QWORD PTR [rbp-72], rax		;
-        fild    QWORD PTR [rbp-72]			;
-        test    rax, rax					;
-        jns     .L13						;
-        fld     TBYTE PTR .LC3[rip]			;
-        faddp   st(1), st					;
-.L13:
-        fild    QWORD PTR [rbp-40]			;
-        fdivp   st(1), st					;
-        lea     rsp, [rsp-16]				;
-        fstp    TBYTE PTR [rsp]				;
-        mov     edi, OFFSET FLAT:.LC4		;
-        mov     eax, 0						;
-        call    printf						;
-        add     rsp, 16						;
-        mov     eax, 0						;
-        leave								;
-        ret									;
-.LC3:
-        .long   0							;
-        .long   -2147483648					;
-        .long   16447						;
-        .long   0							;
+        mov     rax, QWORD PTR [rbp-32]
+        sub     rax, 1
+        cmp     QWORD PTR [rbp-8], rax  ; Проверяем, завершён ли внешний цикл
+        jb      .L7                     ; Продолжаем внешний цикл
+
+        nop                             ; Нет операции
+        leave                          ; Восстанавливаем стек и базовый указатель
+        ret                            ; Возвращаем управление
