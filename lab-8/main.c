@@ -6,7 +6,7 @@
 #include <limits.h>
 
 const int K = 10;
-const int N_MIN = 256;                  //1Kb
+const int N_MIN = 256;                 //1Kb
 const int N_MAX = 8 * 1024 * 1024;    //32Mb
 
 void forward(int *arr, int N) {
