@@ -3,10 +3,11 @@
 #include <stdlib.h>
 #include <time.h>
 #include <immintrin.h>
+#include <limits.h>
 
 const int K = 10;
-const int N_MIN = 256;
-const int N_MAX = 32 * 1024 * 1024;
+const int N_MIN = 256;                  //1Kb
+const int N_MAX = 8 * 1024 * 1024;    //32Mb
 
 void forward(int *arr, int N) {
     for (int i = 0; i < N - 1; i++) {
@@ -30,12 +31,11 @@ void swap(int *a, int *b) {
     *b = c;
 }
 
-void random(int *arr, int N) {
+void random_(int *arr, int N) {
 
     for (int i = 0; i < N; i++) {
         arr[i] = i;
     }
-
 
     for (int i = N - 1; i > 0; i--) {
         swap(&arr[i], &arr[rand() % (i + 1)]);
@@ -52,27 +52,35 @@ void random(int *arr, int N) {
     arr[current] = arr[0];
 }
 
+const int COUNT = 100;
+
 long double tacts(int *arr, int N, FILE *log) {
-    volatile int x = 0;
+    long double min_avg = ULLONG_MAX;
 
-    for (int i = 0; i < N; i++) {
-        x = arr[x];
+    for (int it = 0; it < COUNT; it++) {
+        volatile int x = 0;
+        for (int i = 0; i < N; i++) {
+            x = arr[x];
+        }
+
+        uint64_t start, end;
+        start = __rdtsc();
+        
+        for (int i = 0; i < N * K; i++) {
+            x = arr[x];
+        }
+
+        end = __rdtsc();
+
+        fprintf(log, "%d;%d;%d;%lu;%lu;%lu\n", N, K, it, start, end, end - start);
+
+        long double avg = (long double)(end - start) / (N * K);
+
+        if (min_avg > avg)
+            min_avg = avg;
     }
 
-    uint64_t start, end;
-    start = __rdtsc();
-    
-    for (int i = 0; i < N * K; i++) {
-        x = arr[x];
-    }
-
-    end = __rdtsc();
-
-    fprintf(log, "%d,%d,%Lu,%Lu,%Lu\n", N, K, start, end, end - start);
-
-    long double avg = (long double)(end - start) / (N * K);
-
-    return avg;
+    return min_avg;
 }
 
 int main() {
@@ -81,8 +89,8 @@ int main() {
     FILE *out = fopen("resultO1.csv", "w");
     FILE *log = fopen("log.csv", "w");
 
-    fprintf(out, "Size,Forward,Reverse,Random\n");
-    fprintf(log, "N,K,start,end,result\n");
+    fprintf(out, "Size;Forward;Reverse;Random\n");
+    fprintf(log, "N;K;count_it;start;end;result\n");
     for (int N = N_MIN; N <= N_MAX; N *= 2) {
         int *arr = (int *)malloc(N * sizeof(int));
 
@@ -97,13 +105,14 @@ int main() {
         reverse(arr, N);
         long double time_reverse = tacts(arr, N, log);
 
-        random(arr, N);
+        random_(arr, N);
         long double time_random = tacts(arr, N, log);
 
-        fprintf(out, "%d,%.2Lf,%.2Lf,%.2Lf\n", N * (int)sizeof(int), time_forward, time_reverse, time_random);
+        fprintf(out, "%d;%.2Lf;%.2Lf;%.2Lf\n", N * (int)sizeof(int), time_forward, time_reverse, time_random);
 
         free(arr);
     }
+    
     fclose(out);
     fclose(log);
 
