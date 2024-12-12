@@ -4,7 +4,7 @@
 #include <time.h>
 #include <immintrin.h>
 
-const int K = 100;
+const int K = 10;
 const int N_MIN = 256;
 const int N_MAX = 32 * 1024 * 1024;
 
