@@ -9,14 +9,18 @@ const int N_MIN = 256;
 const int N_MAX = 32 * 1024 * 1024;
 
 void forward(int *arr, int N) {
-    for (int i = 0; i < N - 1; i++)
+    for (int i = 0; i < N - 1; i++) {
         arr[i] = i + 1;
+    }
+
     arr[N - 1] = 0;
 }
 
 void reverse(int *arr, int N) {
-    for (int i = N - 1; i > 0; i--)
+    for (int i = N - 1; i > 0; i--) {
         arr[i] = i - 1;
+    }
+
     arr[0] = N - 1;
 }
 
