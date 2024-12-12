@@ -28,8 +28,9 @@ void swap(int *a, int *b) {
 
 void random(int *arr, int N) {
 
-    for (int i = 0; i < N; i++)
+    for (int i = 0; i < N; i++) {
         arr[i] = i;
+    }
 
 
     for (int i = N - 1; i > 0; i--) {
@@ -47,14 +48,14 @@ void random(int *arr, int N) {
     arr[current] = arr[0];
 }
 
-long double tacts(int *arr, int N) {
+long double tacts(int *arr, int N, FILE *log) {
     volatile int x = 0;
-    uint64_t start, end;
 
     for (int i = 0; i < N; i++) {
         x = arr[x];
     }
 
+    uint64_t start, end;
     start = __rdtsc();
     
     for (int i = 0; i < N * K; i++) {
@@ -63,15 +64,21 @@ long double tacts(int *arr, int N) {
 
     end = __rdtsc();
 
-    return (long double)(end - start) / (N * K);
+    fprintf(log, "%d,%d,%Lu,%Lu,%Lu\n", N, K, start, end, end - start);
+
+    long double avg = (long double)(end - start) / (N * K);
+
+    return avg;
 }
 
 int main() {
     srand(time(NULL));
 
-    FILE *out = freopen("resultO1.csv", "w", stdout);
+    FILE *out = fopen("resultO1.csv", "w");
+    FILE *log = fopen("log.csv", "w");
 
     fprintf(out, "Size,Forward,Reverse,Random\n");
+    fprintf(log, "N,K,start,end,result\n");
     for (int N = N_MIN; N <= N_MAX; N *= 2) {
         int *arr = (int *)malloc(N * sizeof(int));
 
@@ -81,18 +88,20 @@ int main() {
         }
 
         forward(arr, N);
-        long double time_forward = tacts(arr, N);
+        long double time_forward = tacts(arr, N, log);
         
         reverse(arr, N);
-        long double time_reverse = tacts(arr, N);
+        long double time_reverse = tacts(arr, N, log);
 
         random(arr, N);
-        long double time_random = tacts(arr, N);
+        long double time_random = tacts(arr, N, log);
 
         fprintf(out, "%d,%.2Lf,%.2Lf,%.2Lf\n", N * (int)sizeof(int), time_forward, time_reverse, time_random);
 
         free(arr);
     }
+    fclose(out);
+    fclose(log);
 
     return 0;
 }
