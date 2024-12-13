@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <intrin.h>
+#include <immintrin.h>
 #include <inttypes.h>
+#include <limits.h>
 
 
 const int N = 100000000 * 2;
-const int COUNT = 3;
+const int COUNT = 10;
 
 
 uint64_t tacts(int *arr) {
@@ -42,7 +43,7 @@ void fill_array(int *arr, int fragments, int offset, int size){
 }
 
 const int FRAGMENT_SIZE = 1 * 1024 * 1024; //1 MB
-const int OFFSET_SIZE = 2 * 1024 * 1024;   //2 MB
+const int OFFSET_SIZE = 1 * 1024 * 1024;   //2 MB
 
 int main()
 {
@@ -57,10 +58,10 @@ int main()
     
     fprintf(out, "Fragments,Tacts\n");
 
-    for(int n = 1; n <= 128; n++) {
+    for(int n = 1; n <= 64; n++) {
         fill_array(arr, n, OFFSET_SIZE / sizeof(int), FRAGMENT_SIZE / sizeof(int));
 
-        fprintf(out, "%d,%Lu\n", n, tacts(arr));
+        fprintf(out, "%d,%lu\n", n, tacts(arr));
     }
 
     fclose(out);
