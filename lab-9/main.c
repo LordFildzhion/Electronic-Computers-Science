@@ -43,7 +43,7 @@ void fill_array(int *arr, int fragments, int offset, int size){
 }
 
 const int FRAGMENT_SIZE = 1 * 1024 * 1024; //1 MB
-const int OFFSET_SIZE = 1 * 1024 * 1024;   //2 MB
+const int OFFSET_SIZE = 1 * 1024 * 1024;   //1 MB
 
 int main()
 {
