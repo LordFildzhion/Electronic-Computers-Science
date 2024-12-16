@@ -1,3 +1,7 @@
+Input data:
+N = 2048
+M = 10
+
 Main1:
 Time: 142 seconds
 
