@@ -5,17 +5,16 @@
 #include <float.h>
 
 
-void CopyMatrix(float* Matrix1, float* Matrix2, int n){
-    for (int i = 0; i < n; i++){
-        for (int j = 0; j < n; j++){
+void CopyMatrix(float* Matrix1, float* Matrix2, int n) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
             Matrix2[i * n + j] = Matrix1[i * n + j];
         }
     }
 }
 
-void FillMatrix(float *Matrix, int n)
-{
-    srand(time(0));
+void FillMatrix(float *Matrix, int n) {
+    srand(time(NULL));
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
@@ -24,7 +23,7 @@ void FillMatrix(float *Matrix, int n)
     }
 }
 
-float* SumMatrix(float* Matrix1, float* Matrix2, int n){
+float* SumMatrix(float* Matrix1, float* Matrix2, int n) {
     float *MatrixResult = (float *)calloc(n * n, sizeof(float));
 
     for (int i = 0; i < n; i++) {
@@ -36,8 +35,7 @@ float* SumMatrix(float* Matrix1, float* Matrix2, int n){
     return MatrixResult;
 }
 
-float *SubMatrix(float *Matrix1, float *Matrix2, int n)
-{
+float *SubMatrix(float *Matrix1, float *Matrix2, int n) {
     float *MatrixResult = (float *)calloc(n * n, sizeof(float));
 
     for (int i = 0; i < n; i++) {
@@ -49,8 +47,7 @@ float *SubMatrix(float *Matrix1, float *Matrix2, int n)
     return MatrixResult;
 }
 
-float *DivMatrix(float *Matrix1, float digit, int n)
-{
+float *DivMatrix(float *Matrix1, float digit, int n) {
     float *MatrixResult = (float *)calloc(n * n, sizeof(float));
 
     for (int i = 0; i < n; i++) {
@@ -62,9 +59,8 @@ float *DivMatrix(float *Matrix1, float digit, int n)
     return MatrixResult;
 }
 
-void MultMatrix(float *Matrix1, float *Matrix2, float* MatrixResult, int n){
+void MultMatrix(float *Matrix1, float *Matrix2, float* MatrixResult, int n) {
     for (int i = 0; i < n; i++) {
-
         float *c = MatrixResult + i * n;
 
         for (int j = 0; j < n; j++) {
@@ -82,15 +78,15 @@ void MultMatrix(float *Matrix1, float *Matrix2, float* MatrixResult, int n){
     }
 }
 
-void InitializationMatrix(float* Matrix, int n){
+void InitializationMatrix(float* Matrix, int n) {
     for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++){
+        for (int j = 0; j < n; j++) {
             Matrix[i * n + j] = 0;
         }
     }
 }
 
-void FillIdentityMatrix(float *Matrix, int n){
+void FillIdentityMatrix(float *Matrix, int n) {
     for (int i = 0; i < n; i++) {
        Matrix[i * n + i] = 1;
     }
@@ -114,8 +110,7 @@ float UnitRate(float* Matrix, int n) {
     return result;
 }
 
-float InfiniteRate(float *Matrix, int n)
-{
+float InfiniteRate(float *Matrix, int n) {
     float result = 0, sum = 0;
 
     for (int i = 0; i < n; i++) {
@@ -168,7 +163,7 @@ void InversionMatrix(float *Matrix, float* MatrixResult, int n, int m) {
     for (int i = 1; i < m; i++) {
         MatrixC = SumMatrix(MatrixC, MatrixR, n);
         CopyMatrix(MatrixR, MatrixRCopy, n);
-        MultMatrix(MatrixRCopy,MatrixRFix, MatrixR, n);
+        MultMatrix(MatrixRCopy, MatrixRFix, MatrixR, n);
     }
 
     MultMatrix(MatrixC, MatrixB, MatrixResult, n);
@@ -199,9 +194,9 @@ int main() {
     end = time(NULL);
 
     printf("Time: %lld seconds\n", end - start);
-    
+
     float *Matrix2 = (float *)calloc(n * n, sizeof(float));
-    MultMatrix(Matrix1,Matrix, Matrix2, n);
+    MultMatrix(Matrix1, Matrix, Matrix2, n);
 
     printf("Second standart: %f", UnitRate(Matrix2, n));
 
