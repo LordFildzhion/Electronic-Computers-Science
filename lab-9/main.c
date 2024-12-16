@@ -30,8 +30,8 @@ uint64_t tacts(int *arr) {
     return min_time / N;
 }
 
-void fill_array(int *arr, int fragments, int offset, int size){
-    for(int i = 0; i < size; i++){
+void fill_array(int *arr, int fragments, int offset, int size) {
+    for(int i = 0; i < size; i++) {
         for(int j = 1; j < fragments; j++) {
             arr[i + (j - 1) * offset] = i + j * offset;
         }
