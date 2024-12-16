@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <float.h>
+#include <math.h>
 
 
 void CopyMatrix(float *Matrix, float *MatrixC, int n) {
@@ -76,11 +77,11 @@ void FillIdentityMatrix(float *Matrix, int n) {
 }
 
 float UnitRate(float *Matrix, int n) {
-    float result = FLT_MIN, sum = 0;
+    float result = 0, sum = 0;
 
     for (int j = 0; j < n; j++) {
         for (int i = 0; i < n; i++) {
-            sum += abs(Matrix[i * n + j]);
+            sum += fabs(Matrix[i * n + j]);
         }
 
         if (sum > result) {
@@ -203,11 +204,11 @@ int main() {
 
     end = time(NULL);
 
-    printf("Time: %lld seconds\n", end - start);
+    printf("Time: %ld seconds\n", end - start);
     
     MultMatrix(Matrix1, MatrixResult, MatrixCheck, n);
 
-    printf("Second standart: %f", UnitRate(MatrixCheck, n));
+    printf("Second standart: %f\n", UnitRate(MatrixCheck, n));
 
     _mm_free(MatrixResult);
     _mm_free(Matrix1);

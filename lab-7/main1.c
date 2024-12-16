@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <float.h>
+#include <math.h>
 
 
 void CopyMatrix(float* Matrix1, float* Matrix2, int n) {
@@ -93,11 +94,11 @@ void FillIdentityMatrix(float *Matrix, int n) {
 }
 
 float UnitRate(float* Matrix, int n) {
-    float result = FLT_MIN, sum = 0;
+    float result = 0, sum = 0;
 
     for (int j = 0; j < n; j++) {
         for (int i = 0; i < n; i++) {
-            sum += abs(Matrix[i * n + j]);
+            sum += fabs(Matrix[i * n + j]);
         }
 
         if (sum > result) {
@@ -193,12 +194,12 @@ int main() {
 
     end = time(NULL);
 
-    printf("Time: %lld seconds\n", end - start);
+    printf("Time: %ld seconds\n", end - start);
 
     float *Matrix2 = (float *)calloc(n * n, sizeof(float));
     MultMatrix(Matrix1, Matrix, Matrix2, n);
 
-    printf("Second standart: %f", UnitRate(Matrix2, n));
+    printf("Second standart: %f\n", UnitRate(Matrix2, n));
 
     free(Matrix);
     free(Matrix1);
