@@ -11,5 +11,5 @@ Time: 82 seconds
 Second standart: 1.0311
 
 Main3:
-Time: 1,1 seconds
+Time: 1.1 seconds
 Third standart: 1.00011
