@@ -1,25 +1,15 @@
-#include <iostream>
 #include <limits.h>
-#include <ctime>
-#include <cfloat>
-#include <chrono>
+#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <float.h>
 
-using namespace std;
 
 void CopyMatrix(float* Matrix1, float* Matrix2, int n){
     for (int i = 0; i < n; i++){
         for (int j = 0; j < n; j++){
             Matrix2[i * n + j] = Matrix1[i * n + j];
         }
-    }
-}
-
-void PrintMatrix(float* Matrix, int n){
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            cout << Matrix[i * n + j] << "  ";
-        }
-        cout << "\n";
     }
 }
 
@@ -35,7 +25,7 @@ void FillMatrix(float *Matrix, int n)
 }
 
 float* SumMatrix(float* Matrix1, float* Matrix2, int n){
-    float *MatrixResult = new float[n * n];
+    float *MatrixResult = (float *)calloc(n * n, sizeof(float));
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
@@ -48,7 +38,7 @@ float* SumMatrix(float* Matrix1, float* Matrix2, int n){
 
 float *SubMatrix(float *Matrix1, float *Matrix2, int n)
 {
-    float *MatrixResult = new float[n * n];
+    float *MatrixResult = (float *)calloc(n * n, sizeof(float));
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
@@ -61,7 +51,7 @@ float *SubMatrix(float *Matrix1, float *Matrix2, int n)
 
 float *DivMatrix(float *Matrix1, float digit, int n)
 {
-    float *MatrixResult = new float[n * n];
+    float *MatrixResult = (float *)calloc(n * n, sizeof(float));
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
@@ -144,7 +134,7 @@ float InfiniteRate(float *Matrix, int n)
 }
 
 float* TranspositionMatrix(float* Matrix, int n){
-    float* MatrixResult = new float[n * n];
+    float* MatrixResult = (float *)calloc(n * n, sizeof(float));
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
@@ -158,23 +148,23 @@ float* TranspositionMatrix(float* Matrix, int n){
 }
 
 void InversionMatrix(float *Matrix, float* MatrixResult, int n, int m) {
-    float *MatrixIdentity = new float[n * n];
+    float *MatrixIdentity = (float *)calloc(n * n, sizeof(float));
     FillIdentityMatrix(MatrixIdentity, n);
 
     float digit = UnitRate(Matrix, n) * InfiniteRate(Matrix, n);
     float *MatrixB = DivMatrix(TranspositionMatrix(Matrix, n), digit, n);
 
-    float *Matrix1 = new float[n * n];
+    float *Matrix1 = (float *)calloc(n * n, sizeof(float));
     MultMatrix(MatrixB, Matrix, Matrix1, n);
 
-    float *MatrixC = new float[n * n];
+    float *MatrixC = (float *)calloc(n * n, sizeof(float));
     FillIdentityMatrix(MatrixC, n);
 
-    float* MatrixR = new float[n * n];
+    float* MatrixR = (float *)calloc(n * n, sizeof(float));
     float *MatrixRFix = SubMatrix(MatrixIdentity, Matrix1, n);
     CopyMatrix(MatrixRFix, MatrixR, n);
 
-    float *MatrixRCopy = new float[n * n];
+    float *MatrixRCopy = (float *)calloc(n * n, sizeof(float));
     for (int i = 1; i < m; i++) {
         MatrixC = SumMatrix(MatrixC, MatrixR, n);
         CopyMatrix(MatrixR, MatrixRCopy, n);
@@ -183,43 +173,41 @@ void InversionMatrix(float *Matrix, float* MatrixResult, int n, int m) {
 
     MultMatrix(MatrixC, MatrixB, MatrixResult, n);
 
-    delete[] MatrixRFix;
-    delete[] MatrixB;
-    delete[] MatrixIdentity;
-    delete[] Matrix1;
-    delete[] MatrixC;
-    delete[] MatrixR;
-    delete[] MatrixRCopy;
+    free(MatrixRFix);
+    free(MatrixB);
+    free(MatrixIdentity);
+    free(Matrix1);
+    free(MatrixC);
+    free(MatrixR);
+    free(MatrixRCopy);
 }
 
 int main() {
 
     int n, m;
-    cout << "Input N: " << endl;
-    cin >> n;
-    cout << "Input M: " << endl;
-    cin >> m;
-    float *Matrix = new float[n * n];
-    float* Matrix1 = new float[n * n];
+    scanf("%d%d", &n, &m);
+
+    float *Matrix = (float *)calloc(n * n, sizeof(float));
+    float* Matrix1 = (float *)calloc(n * n, sizeof(float));
 
     FillMatrix(Matrix1, n);
 
-    time_t start = time(nullptr), end;
+    time_t start = time(NULL), end;
 
     InversionMatrix(Matrix1, Matrix, n, m);
 
-    end = time(nullptr);
+    end = time(NULL);
 
-    cout << "Time: " << end - start << " seconds" << endl;
+    printf("Time: %lld seconds\n", end - start);
     
-    float *Matrix2 = new float[n * n];
+    float *Matrix2 = (float *)calloc(n * n, sizeof(float));
     MultMatrix(Matrix1,Matrix, Matrix2, n);
 
-    cout << endl << "First standart: "<< UnitRate(Matrix2, n);
+    printf("Second standart: %f", UnitRate(Matrix2, n));
 
-    delete[] Matrix;
-    delete[] Matrix1;
-    delete[] Matrix2;
+    free(Matrix);
+    free(Matrix1);
+    free(Matrix2);
 
     return 0;
 }

@@ -1,10 +1,11 @@
-#include <iostream>
 #include <limits.h>
 #include <immintrin.h>
-#include <ctime>
-#include <cfloat>
+#include <limits.h>
+#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <float.h>
 
-using namespace std;
 
 void CopyMatrix(float *Matrix, float *MatrixC, int n) {
     __m128 a;
@@ -12,15 +13,6 @@ void CopyMatrix(float *Matrix, float *MatrixC, int n) {
     for (int i = 0; i < n * n; i += 4) {
         a = _mm_load_ps(Matrix + i);
         _mm_store_ps(MatrixC + i, a);
-    }
-}
-
-void PrintMatrix(float *Matrix, int n) {
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            cout << Matrix[i * n + j] << " ";
-        }
-        cout << endl;
     }
 }
 
@@ -34,7 +26,7 @@ void FillMatrix(float *Matrix, int n) {
 }
 
 float *SumMatrix(float *Matrix1, float *Matrix2, int n) {
-    float *MatrixResult = new float[n * n];
+    float *MatrixResult = (float *)_mm_malloc(n * n * sizeof(float), 16);
     __m128 a, b, c;
 
     for (int i = 0; i < n * n; i += 4) {
@@ -144,7 +136,10 @@ void MultMatrix(const float *A, const float *B, float *C, int N) {
             __m128 a = _mm_set1_ps(A[i * N + k]);
 
             for (int j = 0; j < N; j += 4) {
-                //_mm_store_ps(c + j, _mm_fmadd_ps(a, _mm_load_ps(b + j), _mm_load_ps(c + j)));
+                __m128 b_val = _mm_load_ps(b + j);
+                __m128 c_val = _mm_load_ps(c + j);
+                __m128 result = _mm_add_ps(_mm_mul_ps(a, b_val), c_val);
+                _mm_store_ps(c + j, result);
             }
         }
     }
@@ -192,30 +187,27 @@ void InversionMatrix(float *Matrix, float *MatrixResult, int n, int m) {
     _mm_free(MatrixTransposition);
 }
 
-int main()
-{
+int main() {
     int n, m;
-    cout << "Input N: " << endl;
-    cin >> n;
-    cout << "Input M: " << endl;
-    cin >> m;
+    scanf("%d%d", &n, &m);
 
     float *Matrix1 = (float *)_mm_malloc(n * n * sizeof(float), 16);
     float *MatrixResult = (float *)_mm_malloc(n * n * sizeof(float), 16);
-    float *MatrixCheck = new float[n * n];
+    float *MatrixCheck = (float *) _mm_malloc(n * n * sizeof(float), 16);
 
     FillMatrix(Matrix1, n);
-    time_t start = time(nullptr), end;
+
+    time_t start = time(NULL), end;
 
     InversionMatrix(Matrix1, MatrixResult, n, m);
 
-    end = time(nullptr);
+    end = time(NULL);
 
-    cout << "Time: " << end - start << " seconds" << endl;
+    printf("Time: %lld seconds\n", end - start);
     
     MultMatrix(Matrix1, MatrixResult, MatrixCheck, n);
 
-    cout << endl << "Second standart: "<< UnitRate(MatrixCheck, n);
+    printf("Second standart: %f", UnitRate(MatrixCheck, n));
 
     _mm_free(MatrixResult);
     _mm_free(Matrix1);
