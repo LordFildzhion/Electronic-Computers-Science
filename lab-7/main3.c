@@ -171,8 +171,7 @@ void InversionMatrix(float *Matrix, float *MatrixResult, int n, int m) {
 
     for (int i = 1; i < m; i++) {
         MatrixC = SumMatrix(MatrixC, MatrixR, n);
-        float *MatrixRCopy;
-        MatrixRCopy = (float *)_mm_malloc(n * n * sizeof(float), 16);
+        float *MatrixRCopy = (float *)_mm_malloc(n * n * sizeof(float), 16);
         CopyMatrix(MatrixR, MatrixRCopy, n);
         cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, n, n, n, 1.0, MatrixRCopy, n, MatrixRFix, n, 0.0, MatrixR, n);
     }
